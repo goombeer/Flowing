@@ -10,12 +10,15 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,startButtonDelegate{
+    
+    @IBOutlet weak var ansImageView: UIImageView!
     
     var screenWidth:CGFloat = UIScreen.main.bounds.size.width
     var screenHeight:CGFloat = UIScreen.main.bounds.size.height
+    var frame = CGRect(x:300,y:150,width:100,height:100)
     
-    var displayLabel:UILabel = {
+    let displayLabel:UILabel = {
         let label = UILabel()
         label.text = "What usually do you do?"
         label.font = UIFont(name:"Copperplate",size:36)
@@ -25,7 +28,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    var questionLabel:UILabel = {
+    let questionLabel:UILabel = {
        let label = UILabel()
         label.text = "What usually do you do?"
         label.font = UIFont(name:"Copperplate",size:36)
@@ -35,31 +38,33 @@ class ViewController: UIViewController {
         return label
     }()
     
-    var startButton:UIButton = {
-        let button = UIButton()
-        button.setTitle("Start", for: .normal)
-        button.backgroundColor = UIColor.blue
-        button.layer.cornerRadius = 10
-        button.layer.frame = CGRect(x:300,y:150,width:100,height:100)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 36)
-        button.addTarget(self, action: #selector(ViewController.animateLabel), for: .touchUpInside)
-        return button
-    }()
+    let easyStartButton:startButton = startButton(frame: CGRect(x:50,y:150,width:150,height:100),title: "Easy")
     
-    var answerButton:UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.blue
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.frame = CGRect(x:0,y:0,width:100,height:100)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        button.layer.cornerRadius = 10
-        return button
-    }()
+    let normalStartButton:startButton = startButton(frame: CGRect(x:270,y:150,width:150,height:100),title: "Normal")
+    
+    let hardStartButton:startButton = startButton(frame: CGRect(x:475,y:150,width:150,height:100),title: "Hard")
+    
+    let ansButton1:answerButton = answerButton(frame: CGRect(x:50,y:200,width:150,height:100),title: "A student")
+    
+    let ansButton2:answerButton = answerButton(frame: CGRect(x:270,y:200,width:150,height:100),title: "A teacher")
+    
+    let ansButton3:answerButton = answerButton(frame: CGRect(x:475,y:200,width:150,height:100),title: "A engineer")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.addSubview(ansButton1)
+        self.view.addSubview(ansButton2)
+        self.view.addSubview(ansButton3)
+        
+        self.easyStartButton.delegate = self
+        self.normalStartButton.delegate = self
+        self.hardStartButton.delegate = self
 
-        self.view.addSubview(startButton)
+        self.view.addSubview(easyStartButton)
+        self.view.addSubview(normalStartButton)
+        self.view.addSubview(hardStartButton)
+
         self.view.addSubview(displayLabel)
     }
 
@@ -69,37 +74,19 @@ class ViewController: UIViewController {
 
     
     @objc func animateLabel(){
-        self.startButton.removeFromSuperview()
-        UIView.animate(withDuration: 10.0, animations: {() -> Void in
+        easyStartButton.isHidden = true
+        normalStartButton.isHidden = true
+        hardStartButton.isHidden = true
+        
+        UIView.animate(withDuration: 0.5, animations: {() -> Void in
             self.displayLabel.frame = CGRect(x:-self.displayLabel.frame.width,y:200,width:self.displayLabel.frame.width,height:self.displayLabel.frame.height)
         }, completion: {(Bool) -> Void in
             self.view.addSubview(self.questionLabel)
-//            self.addAnswerLabel()
+            self.ansButton1.isHidden = false
+            self.ansButton2.isHidden = false
+            self.ansButton3.isHidden = false
         })
     }
     
-//    func addAnswerLabel(){
-//        var num:Int = 0
-//        repeat {
-//            if num == 0 {
-//                print(num)
-//                self.answerButton.setTitle("A student", for: .normal)
-//                self.answerButton.layer.frame = CGRect(x:100,y:150,width:100,height:100)
-//                self.view.addSubview(self.answerButton)
-//            }else if num == 1 {
-//                print(num)
-//                self.answerButton.setTitle("A programmer", for: .normal)
-//                self.answerButton.layer.frame = CGRect(x:200,y:150,width:100,height:100)
-//                self.view.addSubview(self.answerButton)
-//            }else if num == 2 {
-//                print(num)
-//                self.answerButton.setTitle("A teacher", for: .normal)
-//                self.answerButton.layer.frame = CGRect(x:300,y:150,width:100,height:100)
-//                self.view.addSubview(self.answerButton)
-//            }
-//
-//            num += 1
-//        } while (num <= 2)
-//    }
 }
 
