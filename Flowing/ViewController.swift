@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController,startButtonDelegate{
+class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
   
     @IBOutlet weak var ansImageView: UIImageView!
     
@@ -63,6 +63,11 @@ class ViewController: UIViewController,startButtonDelegate{
         self.normalStartButton.delegate = self
         self.hardStartButton.delegate = self
 
+        self.ansButton1.delegate = self
+        self.ansButton2.delegate = self
+        self.ansButton3.delegate = self
+
+        
         self.view.addSubview(easyStartButton)
         self.view.addSubview(normalStartButton)
         self.view.addSubview(hardStartButton)
@@ -99,5 +104,16 @@ class ViewController: UIViewController,startButtonDelegate{
         })
     }
     
+    @objc func showAnswer(sender:answerButton){
+        print(sender)
+        let ans = sender.titleLabel?.text
+        if ans == "A student" {
+            self.ansImageView.image = UIImage(named:"wrong")
+        } else if ans == "A teacher" {
+            self.ansImageView.image = UIImage(named:"wrong")
+        } else {
+            self.ansImageView.image = UIImage(named:"correct")
+        }
+    }
 }
 

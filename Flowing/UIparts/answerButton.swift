@@ -8,7 +8,14 @@
 
 import UIKit
 
+
+@objc protocol answerButtonDelegate{
+    func showAnswer(sender:answerButton)
+}
+
 class answerButton: UIButton {
+    weak var delegate: answerButtonDelegate?
+    
     let correctImage = UIImage(named: "correct")
     let wrongImage = UIImage(named: "wrong")
     
@@ -28,15 +35,8 @@ class answerButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func tap(sender: UIButton){
-        let answer = sender.titleLabel?.text
-        if answer == "A student" {
-            print("生徒")
-        } else if answer == "A teacher" {
-            print("先生")
-        } else {
-            print("エンジニア")
-        }
+    @objc func tap(){
+        self.delegate?.showAnswer(sender:self)
     }
     
 }
