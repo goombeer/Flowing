@@ -11,13 +11,15 @@ import RxSwift
 import RxCocoa
 
 class ViewController: UIViewController,startButtonDelegate{
-    
+  
     @IBOutlet weak var ansImageView: UIImageView!
     
     var screenWidth:CGFloat = UIScreen.main.bounds.size.width
     var screenHeight:CGFloat = UIScreen.main.bounds.size.height
     var frame = CGRect(x:300,y:150,width:100,height:100)
     
+    var speed:CGFloat = 0.0
+
     let displayLabel:UILabel = {
         let label = UILabel()
         label.text = "What usually do you do?"
@@ -73,12 +75,21 @@ class ViewController: UIViewController,startButtonDelegate{
     }
 
     
-    @objc func animateLabel(){
+    @objc func animateLabel(sender:startButton){
+        let selectMode:String = (sender.titleLabel?.text)!
+        if selectMode == "Easy" {
+            self.speed = 10
+        } else if selectMode == "Normal" {
+            self.speed = 5
+        } else {
+            self.speed = 1
+        }
+        
         easyStartButton.isHidden = true
         normalStartButton.isHidden = true
         hardStartButton.isHidden = true
         
-        UIView.animate(withDuration: 0.5, animations: {() -> Void in
+        UIView.animate(withDuration: TimeInterval(speed), animations: {() -> Void in
             self.displayLabel.frame = CGRect(x:-self.displayLabel.frame.width,y:200,width:self.displayLabel.frame.width,height:self.displayLabel.frame.height)
         }, completion: {(Bool) -> Void in
             self.view.addSubview(self.questionLabel)
