@@ -10,7 +10,7 @@ import UIKit
 
 
 @objc protocol answerButtonDelegate{
-    func showAnswer(sender:answerButton)
+    func tapAnswer(sender:answerButton)
 }
 
 class answerButton: UIButton {
@@ -36,7 +36,7 @@ class answerButton: UIButton {
     }
     
     @objc func tap(){
-        self.delegate?.showAnswer(sender:self)
+        self.delegate?.tapAnswer(sender:self)
     }
     
 }

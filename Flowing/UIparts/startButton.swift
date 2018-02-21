@@ -10,7 +10,7 @@ import UIKit
 
 
 @objc protocol startButtonDelegate{
-    func animateLabel(sender:startButton)
+    func tapStart(sender:startButton)
 }
 
 class startButton: UIButton {
@@ -31,6 +31,6 @@ class startButton: UIButton {
     }
     
     @objc func tappedButton(){
-        self.delegate?.animateLabel(sender: self)
+        self.delegate?.tapStart(sender: self)
     }
 }
