@@ -16,7 +16,6 @@ class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
     
     var screenWidth:CGFloat = UIScreen.main.bounds.size.width
     var screenHeight:CGFloat = UIScreen.main.bounds.size.height
-    var frame = CGRect(x:300,y:150,width:100,height:100)
     
     var questionArray: QuestionData?
     
@@ -28,7 +27,7 @@ class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
         label.text = "What usually do you do?"
         label.font = UIFont(name:"Copperplate",size:36)
         label.frame = CGRect(x:
-            700,y:200,width:500,height:100)
+            700,y:50,width:500,height:100)
         label.sizeToFit()
         return label
     }()
@@ -50,6 +49,7 @@ class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
         
         QuestionDataManager.sharedInstance.loadQuestion()
         self.questionArray = QuestionDataManager.sharedInstance.goNextQuestion()
+        
         self.view.addSubview(ansButton1)
         self.view.addSubview(ansButton2)
         self.view.addSubview(ansButton3)
@@ -104,7 +104,7 @@ class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
     
     func animateLabel(){
         UIView.animate(withDuration: TimeInterval(speed), animations: {() -> Void in
-            self.displayLabel.frame = CGRect(x:-self.displayLabel.frame.width,y:200,width:self.displayLabel.frame.width,height:self.displayLabel.frame.height)
+            self.displayLabel.frame = CGRect(x:-self.displayLabel.frame.width,y:50,width:self.displayLabel.frame.width,height:self.displayLabel.frame.height)
         }, completion: {(Bool) -> Void in
             self.ansButton1.isHidden = false
             self.ansButton2.isHidden = false
@@ -113,7 +113,6 @@ class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
     }
     
     func showAnswer(answer:String){
-
         questionArray?.userChoiceAnswer = answer
         if (questionArray?.isCorrect())!{
             self.score += 1
@@ -122,65 +121,55 @@ class ViewController: UIViewController,startButtonDelegate,answerButtonDelegate{
             guard let nextQuestion = QuestionDataManager.sharedInstance.goNextQuestion() else{
                 //nilの場合→得点表示
                 self.resetDisplay()
-                self.displayLabel.text = String(score) + "点"
-                self.displayLabel.frame = CGRect(x:350,y:100,width:150,height:100)
+                self.showResult()
                 return
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){
                 self.resetDisplay()
-                self.ansButton1.setTitle(nextQuestion.answer1, for: .normal)
-                self.ansButton2.setTitle(nextQuestion.answer2, for: .normal)
-                self.ansButton3.setTitle(nextQuestion.answer3, for: .normal)
-                
-                self.displayLabel.text = nextQuestion.question
-                self.displayLabel.frame = CGRect(x:
-                    700,y:200,width:500,height:100)
-                
-                self.questionArray = nextQuestion
+                self.setQuestion(nextQuestion: nextQuestion)
                 self.animateLabel()
             }
-            
         } else {
             self.ansImageView.image = UIImage(named:"wrong")
             AudioServicesPlayAlertSound(1006)
             guard let nextQuestion = QuestionDataManager.sharedInstance.goNextQuestion() else{
                 //nilの場合→得点表示
                 self.resetDisplay()
-                self.displayLabel.text = String(score)
-                self.displayLabel.frame = CGRect(x:270,y:150,width:150,height:100)
+                self.showResult()
                 return
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){
                 self.resetDisplay()
-                self.ansButton1.setTitle(nextQuestion.answer1, for: .normal)
-                self.ansButton2.setTitle(nextQuestion.answer2, for: .normal)
-                self.ansButton3.setTitle(nextQuestion.answer3, for: .normal)
-                
-                self.displayLabel.text = nextQuestion.question
-
-                self.displayLabel.frame = CGRect(x:
-                    700,y:200,width:500,height:100)
-                
-                self.questionArray = nextQuestion
+                self.setQuestion(nextQuestion: nextQuestion)
                 self.animateLabel()
             }
         }
 
     }
     
-    
-        
-        
     func resetDisplay(){
-        self.displayLabel.frame = CGRect(x:
-            700,y:200,width:300,height:100)
-            self.ansImageView.image = UIImage(named:"blank")
-            self.ansButton1.isHidden = true
-            self.ansButton2.isHidden = true
-            self.ansButton3.isHidden = true
+        self.displayLabel.frame = CGRect(x:700,y:50,width:500,height:100)
+        self.ansImageView.image = UIImage(named:"blank")
+        self.ansButton1.isHidden = true
+        self.ansButton2.isHidden = true
+        self.ansButton3.isHidden = true
         
     }
     
-
+    func showResult(){
+        self.displayLabel.font = UIFont(name:"Copperplate",size:36)
+        self.displayLabel.text = String(score) + "点"
+        self.displayLabel.frame = CGRect(x:350,y:50,width:150,height:100)
+    }
+    
+    func setQuestion(nextQuestion:QuestionData){
+        self.ansButton1.setTitle(nextQuestion.answer1, for: .normal)
+        self.ansButton2.setTitle(nextQuestion.answer2, for: .normal)
+        self.ansButton3.setTitle(nextQuestion.answer3, for: .normal)
+        
+        self.displayLabel.text = nextQuestion.question
+        
+        self.questionArray = nextQuestion
+    }
 }
 
